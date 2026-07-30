@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es-CO" class="h-100">
+
+<!-- Reutiliza la cabecera head centralizada -->
+<head th:replace="~{layout/header :: head}"></head>
+
+<body class="d-flex flex-column h-100 bg-light">
+
+    <!-- Reutiliza la barra de navegación -->
+    <nav th:replace="~{layout/navbar :: navbar}"></nav>
+
+    <!-- Contenido Principal -->
+    <main class="container my-auto py-5">
+
+        <!-- Encabezado del Carrito (Muestra el Usuario Logueado - Requisito 3) -->
+        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 pb-3 border-bottom gap-2">
+            <div>
+                <h2 class="fw-bold text-dark mb-1 d-flex align-items-center gap-2">
+                    <i class="bi bi-cart-fill text-success fs-2"></i> Mi Carrito de Compras
+                </h2>
+                <p class="text-muted small mb-0">
+                    Usuario logueado: <strong class="text-success" th:text="${cart.userFullName}">Nombre Usuario</strong> 
+                    (<span class="text-muted" th:text="${cart.userEmail}">correo@botanica.com</span>)
+                </p>
+            </div>
+
+            <div class="d-flex gap-2">
+                <a th:href="@{/products}" class="btn btn-outline-success rounded-pill px-3 btn-sm">
+                    <i class="bi bi-arrow-left me-1"></i> Seguir Comprando
+                </a>
+                
+                <form th:if="${not #lists.isEmpty(cart.items)}" th:action="@{/cart/clear}" method="post">
+                    <button type="submit" class="btn btn-outline-danger rounded-pill px-3 btn-sm" 
+                            onclick="return confirm('¿Está seguro de que desea vaciar todo el carrito?');">
+                        <i class="bi bi-trash me-1"></i> Vaciar Carrito
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Alertas de Éxito o Error -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i> <span th:text="${successMessage}">¡Acción realizada con éxito!</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> <span th:text="${errorMessage}">Ocurrió un error.</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+
+        <!-- Sección del Carrito (Tabla de Compras y Resumen de Totales - Requisito 3) -->
+        <div th:if="${not #lists.isEmpty(cart.items)}" class="row g-4">
+            
+            <!-- Columna Izquierda: Tabla de Productos Agregados -->
+            <div class="col-lg-8">
+                <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th scope="col" class="ps-4">Producto</th>
+                                        <th scope="col">Precio Unitario</th>
+                                        <th scope="col" class="text-center">Cantidad</th>
+                                        <th scope="col" class="text-end">Subtotal</th>
+                                        <th scope="col" class="text-center pe-4">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="item : ${cart.items}">
+                                        <!-- Producto (Imagen y Nombre) -->
+                                        <td class="ps-4">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <img th:if="${item.productImageUrl != null and !item.productImageUrl.isEmpty()}" 
+                                                     th:src="${item.productImageUrl}" 
+                                                     th:alt="${item.productName}" 
+                                                     class="rounded-3 shadow-sm" style="width: 55px; height: 55px; object-fit: cover;">
+                                                
+                                                <img th:unless="${item.productImageUrl != null and !item.productImageUrl.isEmpty()}" 
+                                                     th:src="@{/images/products/placeholder.jpg}" 
+                                                     alt="Planta de prueba" 
+                                                     class="rounded-3 shadow-sm" style="width: 55px; height: 55px; object-fit: cover;">
+                                                
+                                                <div>
+                                                    <a th:href="@{/products/{id}(id=${item.productId})}" 
+                                                       class="fw-bold text-dark text-decoration-none" th:text="${item.productName}">
+                                                        Nombre Planta
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <!-- Precio Unitario -->
+                                        <td class="text-muted fw-semibold" 
+                                            th:text="'$' + ${#numbers.formatDecimal(item.unitPrice, 1, 'POINT', 2, 'COMMA')}">$0.00</td>
+
+                                        <!-- Cantidad (Formulario para Actualizar) -->
+                                        <td class="text-center">
+                                            <form th:action="@{/cart/update}" method="post" class="d-inline-flex align-items-center gap-1">
+                                                <input type="hidden" name="cartItemId" th:value="${item.id}" />
+                                                <input type="number" name="quantity" class="form-control form-control-sm text-center fw-bold rounded-2" 
+                                                       th:value="${item.quantity}" min="1" max="99" style="width: 65px;" required>
+                                                <button type="submit" class="btn btn-sm btn-outline-success" title="Actualizar cantidad">
+                                                    <i class="bi bi-arrow-repeat"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+
+                                        <!-- Subtotal -->
+                                        <td class="text-end fw-bold text-success" 
+                                            th:text="'$' + ${#numbers.formatDecimal(item.subtotal, 1, 'POINT', 2, 'COMMA')}">$0.00</td>
+
+                                        <!-- Acción Eliminar Ítem -->
+                                        <td class="text-center pe-4">
+                                            <a th:href="@{/cart/remove/{itemId}(itemId=${item.id})}" 
+                                               class="btn btn-sm btn-outline-danger rounded-circle p-2" 
+                                               title="Eliminar del carrito"
+                                               onclick="return confirm('¿Desea quitar este producto del carrito?');">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Resumen de Compra y Total a Pagar -->
+            <div class="col-lg-4">
+                <div class="card shadow-lg border-0 rounded-4 p-4 bg-white sticky-top" style="top: 90px;">
+                    <h4 class="fw-bold text-dark mb-3 border-bottom pb-2">Resumen de Compra</h4>
+                    
+                    <div class="d-flex justify-content-between text-muted mb-2">
+                        <span>Total de Artículos:</span>
+                        <strong class="text-dark" th:text="${cart.totalItems}">0</strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between text-muted mb-3">
+                        <span>Envío estimado:</span>
+                        <span class="badge bg-success bg-opacity-10 text-success fw-bold">Gratis</span>
+                    </div>
+
+                    <hr class="my-3">
+
+                    <!-- Total a Pagar (Requisito 3) -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <span class="fs-5 fw-bold text-dark">Total a pagar:</span>
+                        <span class="fs-3 fw-extrabold text-success" 
+                              th:text="'$' + ${#numbers.formatDecimal(cart.totalAmount, 1, 'POINT', 2, 'COMMA')}">$0.00</span>
+                    </div>
+
+                    <button class="btn btn-success btn-lg w-100 rounded-pill shadow-sm fw-bold mb-2">
+                        <i class="bi bi-bag-check-fill me-2"></i> Proceder al Pago
+                    </button>
+
+                    <small class="text-muted text-center d-block">
+                        <i class="bi bi-shield-check text-success me-1"></i> Tus productos quedan guardados automáticamente en tu cuenta.
+                    </small>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Estado Vacío (Carrito sin Productos) -->
+        <div th:if="${#lists.isEmpty(cart.items)}" class="text-center py-5 bg-white rounded-4 shadow-sm my-4 p-5">
+            <i class="bi bi-cart-x text-muted display-1"></i>
+            <h3 class="fw-bold text-dark mt-3">Tu carrito está vacío</h3>
+            <p class="text-muted fs-5">Aún no has agregado plantas ni artículos a tu carrito de compras.</p>
+            <a th:href="@{/products}" class="btn btn-success btn-lg rounded-pill px-4 mt-3 shadow-sm fw-bold">
+                <i class="bi bi-bag-plus-fill me-2"></i> Explorar el Catálogo
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Reutiliza el pie de página -->
+    <footer th:replace="~{layout/footer :: footer}"></footer>
+
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="es-CO" class="h-100">
+
+<!-- Reutiliza la cabecera head centralizada -->
+<head th:replace="~{layout/header :: head}"></head>
+
+<body class="d-flex flex-column h-100 bg-light">
+
+    <!-- Reutiliza la barra de navegación -->
+    <nav th:replace="~{layout/navbar :: navbar}"></nav>
+
+    <!-- Contenido Principal del Catálogo -->
+    <main class="flex-shrink-0 mb-5">
+
+        <!-- Banner Principal Hero -->
+        <section class="hero text-center py-5 bg-success text-white shadow-sm mb-4">
+            <div class="container py-3">
+                <h1 class="hero__title display-4 fw-bold">Naturaleza en tu Hogar</h1>
+                <p class="hero__subtitle lead text-light opacity-90 mx-auto" style="max-width: 650px;">
+                    Encuentra las mejores plantas de interior, macetas artesanales y accesorios para transformar tus espacios urbanos.
+                </p>
+            </div>
+        </section>
+
+        <div class="container">
+
+            <!-- Alertas de Éxito o Error -->
+            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i> <span th:text="${successMessage}">¡Producto agregado al carrito!</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+
+            <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> <span th:text="${errorMessage}">Ocurrió un error.</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+
+            <!-- Filtros por Categoría (Píldoras) -->
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h5 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                    <i class="bi bi-funnel-fill text-success"></i> Categorías
+                </h5>
+                <a th:if="${selectedCategoryId != null or keyword != null}" th:href="@{/products}" class="btn btn-sm btn-outline-secondary rounded-pill">
+                    <i class="bi bi-x-circle me-1"></i> Limpiar Filtros
+                </a>
+            </div>
+
+            <div class="category-filter mb-4 pb-2">
+                <a th:href="@{/products}" 
+                   class="category-filter__item" 
+                   th:classappend="${selectedCategoryId == null and keyword == null} ? 'category-filter__item--active' : ''">
+                    Todas las plantas
+                </a>
+                <a th:each="category : ${categories}" 
+                   th:href="@{/products/category/{id}(id=${category.id})}" 
+                   class="category-filter__item"
+                   th:classappend="${selectedCategoryId == category.id} ? 'category-filter__item--active' : ''"
+                   th:text="${category.name}">
+                    Nombre Categoría
+                </a>
+            </div>
+
+            <!-- Indicador de Resultados de Búsqueda -->
+            <div th:if="${keyword != null and !keyword.trim().isEmpty()}" class="alert alert-light border shadow-sm mb-4">
+                <i class="bi bi-search text-success me-2"></i> Mostrando resultados de búsqueda para: <strong th:text="${keyword}">palabra</strong>
+            </div>
+
+            <!-- Galería de Productos (Grid Responsivo de Bootstrap) -->
+            <div th:if="${not #lists.isEmpty(products)}" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+                
+                <!-- Tarjeta de Producto Individual (Cumple con Requisito 2) -->
+                <div class="col" th:each="product : ${products}">
+                    <div class="plant-card card h-100 shadow-sm border-0 rounded-3 overflow-hidden">
+                        
+                        <!-- Imagen e Insignia de Categoría -->
+                        <div class="plant-card__image-wrapper bg-light text-center position-relative">
+                            <span class="plant-card__category-badge bg-success text-white badge position-absolute top-0 end-0 m-2 px-2 py-1" 
+                                  th:text="${product.categoryName}">Categoría</span>
+                            
+                            <a th:href="@{/products/{id}(id=${product.id})}">
+                                <img th:if="${product.imageUrl != null and !product.imageUrl.isEmpty()}" 
+                                     th:src="${product.imageUrl}" 
+                                     th:alt="${product.name}" 
+                                     class="card-img-top plant-card__image" style="height: 220px; object-fit: cover;">
+                                
+                                <img th:unless="${product.imageUrl != null and !product.imageUrl.isEmpty()}" 
+                                     th:src="@{/images/products/placeholder.jpg}" 
+                                     alt="Planta de prueba" 
+                                     class="card-img-top plant-card__image" style="height: 220px; object-fit: cover;">
+                            </a>
+                        </div>
+
+                        <!-- Cuerpo de la Tarjeta (Nombre y Descripción) -->
+                        <div class="plant-card__body card-body d-flex flex-column">
+                            <h5 class="plant-card__title card-title fw-bold text-dark mb-1">
+                                <a th:href="@{/products/{id}(id=${product.id})}" th:text="${product.name}" class="text-decoration-none text-dark">Nombre Producto</a>
+                            </h5>
+                            
+                            <p class="plant-card__description card-text text-muted small mb-3 flex-grow-1" th:text="${product.description}">
+                                Descripción breve del producto.
+                            </p>
+
+                            <!-- Precio y Botón Agregar Producto -->
+                            <div class="plant-card__footer d-flex align-items-center justify-content-between pt-2 border-top">
+                                <span class="plant-card__price fw-extrabold text-success fs-5" 
+                                      th:text="'$' + ${#numbers.formatDecimal(product.price, 1, 'POINT', 2, 'COMMA')}">$0.00</span>
+                                
+                                <!-- Formulario Agregar al Carrito (Procesado únicamente para usuarios autenticados) -->
+                                <form sec:authorize="isAuthenticated()" th:action="@{/cart/add}" method="post">
+                                    <input type="hidden" name="productId" th:value="${product.id}" />
+                                    <input type="hidden" name="quantity" value="1" />
+                                    <button type="submit" class="btn btn-sm btn-success rounded-pill px-3 shadow-sm d-flex align-items-center gap-1">
+                                        <i class="bi bi-cart-plus-fill"></i> Agregar
+                                    </button>
+                                </form>
+
+                                <!-- Botón para Usuarios Anónimos (Redirige al Login) -->
+                                <a sec:authorize="isAnonymous()" th:href="@{/login}" class="btn btn-sm btn-outline-success rounded-pill px-3 d-flex align-items-center gap-1" title="Inicia sesión para comprar">
+                                    <i class="bi bi-cart-plus"></i> Agregar
+                                </a>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Estado Vacío (Sin Resultados) -->
+            <div th:if="${#lists.isEmpty(products)}" class="text-center py-5 bg-white rounded-4 shadow-sm my-4">
+                <i class="bi bi-flower2 text-muted display-1"></i>
+                <h4 class="fw-bold text-dark mt-3">No hay productos disponibles</h4>
+                <p class="text-muted">No encontramos plantas o artículos que coincidan con tu filtro o búsqueda actual.</p>
+                <a th:href="@{/products}" class="btn btn-success rounded-pill px-4 mt-2">
+                    <i class="bi bi-arrow-counterclockwise me-1"></i> Ver todo el catálogo
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Reutiliza el pie de página -->
+    <footer th:replace="~{layout/footer :: footer}"></footer>
+
+</body>
+</html>
