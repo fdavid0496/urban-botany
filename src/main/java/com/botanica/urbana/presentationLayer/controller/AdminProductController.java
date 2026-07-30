@@ -49,7 +49,7 @@ public class AdminProductController {
     }
 
     /**
-     * Procesa la creación de un nuevo producto enviando desde el formulario.
+     * Procesa la creación de un nuevo producto, procesando el archivo de imagen adjunto.
      */
     @PostMapping
     public String processCreateProduct(
@@ -65,7 +65,7 @@ public class AdminProductController {
 
         try {
             productService.createProduct(productRequestDto);
-            redirectAttributes.addFlashAttribute("successMessage", "¡Producto creado exitosamente!");
+            redirectAttributes.addFlashAttribute("successMessage", "¡Producto creado y guardado exitosamente!");
             return "redirect:/admin/products";
         } catch (BadRequestException ex) {
             model.addAttribute("errorMessage", ex.getMessage());
@@ -75,8 +75,7 @@ public class AdminProductController {
     }
 
     /**
-     * Muestra el formulario cargado con los datos de un producto existente para su
-     * edición.
+     * Muestra el formulario cargado con los datos de un producto existente para su edición.
      */
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
@@ -97,7 +96,7 @@ public class AdminProductController {
     }
 
     /**
-     * Procesa la actualización de un producto existente.
+     * Procesa la actualización de un producto existente y reemplaza su imagen si se selecciona una nueva.
      */
     @PostMapping("/edit/{id}")
     public String processUpdateProduct(

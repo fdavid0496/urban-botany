@@ -1,7 +1,5 @@
 package com.botanica.urbana.presentationLayer.dto.request;
 
-import java.math.BigDecimal;
-
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
@@ -12,6 +10,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.math.BigDecimal;
 
 /**
  * DTO que captura y valida la información enviada desde el formulario de creación
@@ -23,7 +24,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class ProductRequestDto {
-    
+
     /**
      * Nombre comercial del producto o planta.
      */
@@ -46,10 +47,15 @@ public class ProductRequestDto {
     private BigDecimal price;
 
     /**
-     * Ruta o URL de la imagen del producto.
+     * Ruta o URL de la imagen del producto (opcional si se sube archivo).
      */
     @Size(max = 255, message = "La URL de la imagen no puede exceder los 255 caracteres")
     private String imageUrl;
+
+    /**
+     * Archivo de imagen seleccionado localmente desde la computadora.
+     */
+    private MultipartFile imageFile;
 
     /**
      * Identificador de la categoría asociada al producto.
