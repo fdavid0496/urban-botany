@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es-CO" class="h-100">
+
+<!-- Reutiliza la cabecera head centralizada -->
+<head th:replace="~{layout/header :: head}"></head>
+
+<body class="d-flex flex-column h-100 bg-light">
+
+    <!-- Reutiliza la barra de navegación -->
+    <nav th:replace="~{layout/navbar :: navbar}"></nav>
+
+    <!-- Contenido Principal -->
+    <main class="container my-auto py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+
+                <!-- Tarjeta de Registro -->
+                <div class="card shadow-lg border-0 rounded-4 p-4">
+                    <div class="card-body">
+
+                        <!-- Encabezado de la Tarjeta -->
+                        <div class="text-center mb-4">
+                            <i class="bi bi-person-plus-fill text-success display-3"></i>
+                            <h2 class="fw-bold text-dark mt-2">Crear Cuenta</h2>
+                            <p class="text-muted small">Regístrate para comenzar a comprar en Botánica Urbana</p>
+                        </div>
+
+                        <!-- Alerta de Error de Negocio (ej. Correo duplicado o contraseñas no coincidentes) -->
+                        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show rounded-3 small" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i> <span th:text="${errorMessage}">Error en el registro</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                        </div>
+
+                        <!-- Formulario de Registro -->
+                        <form th:action="@{/register}" th:object="${userRegisterRequestDto}" method="post" class="needs-validation" novalidate>
+                            
+                            <!-- Campo Nombre Completo -->
+                            <div class="mb-3">
+                                <label for="fullName" class="form-label fw-semibold">Nombre Completo</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-person-fill text-muted"></i></span>
+                                    <input type="text" class="form-control border-start-0" id="fullName" th:field="*{fullName}"
+                                           placeholder="Ej. Maria Fernanda Perez" 
+                                           th:classappend="${#fields.hasErrors('fullName')} ? 'is-invalid' : ''" required>
+                                </div>
+                                <div class="invalid-feedback d-block text-danger small mt-1" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}">
+                                    Error en el nombre
+                                </div>
+                            </div>
+
+                            <!-- Campo Correo Electrónico -->
+                            <div class="mb-3">
+                                <label for="email" class="form-label fw-semibold">Correo Electrónico</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope-fill text-muted"></i></span>
+                                    <input type="email" class="form-control border-start-0" id="email" th:field="*{email}"
+                                           placeholder="ejemplo@correo.com" 
+                                           th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''" required>
+                                </div>
+                                <div class="invalid-feedback d-block text-danger small mt-1" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
+                                    Error en el correo
+                                </div>
+                            </div>
+
+                            <!-- Campo Contraseña -->
+                            <div class="mb-3">
+                                <label for="password" class="form-label fw-semibold">Contraseña</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-lock-fill text-muted"></i></span>
+                                    <input type="password" class="form-control border-start-0" id="password" th:field="*{password}"
+                                           placeholder="Mínimo 6 caracteres" 
+                                           th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''" required>
+                                </div>
+                                <div class="invalid-feedback d-block text-danger small mt-1" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
+                                    Error en la contraseña
+                                </div>
+                            </div>
+
+                            <!-- Campo Confirmar Contraseña -->
+                            <div class="mb-4">
+                                <label for="confirmPassword" class="form-label fw-semibold">Confirmar Contraseña</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-shield-lock-fill text-muted"></i></span>
+                                    <input type="password" class="form-control border-start-0" id="confirmPassword" th:field="*{confirmPassword}"
+                                           placeholder="Repite tu contraseña" 
+                                           th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid' : ''" required>
+                                </div>
+                                <div class="invalid-feedback d-block text-danger small mt-1" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}">
+                                    Error en la confirmación
+                                </div>
+                            </div>
+
+                            <!-- Botón de Envío -->
+                            <button type="submit" class="btn btn-success btn-lg w-100 rounded-3 fw-bold mb-3 shadow-sm">
+                                <i class="bi bi-person-check-fill me-2"></i> Registrarme
+                            </button>
+
+                        </form>
+
+                        <!-- Enlace a Login -->
+                        <div class="text-center mt-3 pt-3 border-top">
+                            <p class="text-muted small mb-0">¿Ya tienes una cuenta registrada? 
+                                <a th:href="@{/login}" class="text-success fw-bold text-decoration-none">Inicia sesión aquí</a>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Reutiliza el pie de página -->
+    <footer th:replace="~{layout/footer :: footer}"></footer>
+
+</body>
+</html>

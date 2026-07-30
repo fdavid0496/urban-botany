@@ -1,0 +1,24 @@
+<!-- Fragmento Reutilizable de la Cabecera Head -->
+<head th:fragment="head" xmlns:th="http://www.thymeleaf.org">
+    <!-- Meta etiquetas estándar de HTML5 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Botánica Urbana - Tu tienda en línea especializada en plantas de interior, macetas y artículos de jardinería en Colombia.">
+    <meta name="author" content="Botánica Urbana">
+
+    <!-- Título dinámico con soporte para Thymeleaf -->
+    <title th:text="${pageTitle} != null ? ${pageTitle} + ' | Botánica Urbana' : 'Botánica Urbana | Tienda de Plantas y Jardinería'">Botánica Urbana</title>
+
+    <!-- Framework CSS: Bootstrap 5.3.8 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" 
+          rel="stylesheet" 
+          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" 
+          crossorigin="anonymous">
+
+    <!-- Biblioteca de Íconos: Bootstrap Icons 1.13.1 -->
+    <link rel="stylesheet" 
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <!-- Hoja de Estilos Personalizada de Botánica Urbana -->
+    <link rel="stylesheet" th:href="@{/css/styles.css}" href="/css/styles.css">
+</head>

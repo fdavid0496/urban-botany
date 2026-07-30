@@ -1,0 +1,33 @@
+<!-- Fragmento Reutilizable del Pie de Página (Footer) -->
+<footer th:fragment="footer" 
+        xmlns:th="http://www.thymeleaf.org"
+        class="bg-dark text-light pt-4 pb-3 mt-auto border-top border-success">
+    <div class="container">
+        <div class="row gy-3 align-items-center">
+            
+            <!-- Columna 1: Marca e Información -->
+            <div class="col-md-6 text-center text-md-start">
+                <h5 class="text-success fw-bold d-flex align-items-center justify-content-center justify-content-md-start gap-2 mb-1">
+                    <i class="bi bi-flower1"></i> Botánica Urbana
+                </h5>
+                <p class="text-muted small mb-0">
+                    E-Commerce especializado en plantas de interior, macetas artesanales y artículos de jardinería.
+                </p>
+            </div>
+
+            <!-- Columna 2: Derechos de Autor y Créditos -->
+            <div class="col-md-6 text-center text-md-end">
+                <p class="text-muted small mb-0">
+                    &copy; <span th:text="${#temporals.createNow().year}">2026</span> <strong>Botánica Urbana</strong>. Todos los derechos reservados.
+                </p>
+                <small class="text-muted">Ingeniería de Software III - Laboratorio 9</small>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Bundle JavaScript de Bootstrap 5.3.8 (requerido para menú desplegable, modales y colapsables) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" 
+            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" 
+            crossorigin="anonymous"></script>
+</footer>

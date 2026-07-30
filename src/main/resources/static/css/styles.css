@@ -1,0 +1,448 @@
+/* =============================================================================
+   BOTÁNICA URBANA - HOJA DE ESTILOS PRINCIPAL
+   Metodología: BEM / Mobile-First / CSS3 Moderno
+   ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   1. VARIABLES DE CSS (CUSTOM PROPERTIES)
+   ----------------------------------------------------------------------------- */
+:root {
+  /* Paleta de Colores Botánicos */
+  --clr-primary-900: #1b4332;
+  --clr-primary-800: #2d6a4f;
+  --clr-primary-700: #40916c;
+  --clr-primary-500: #52b788;
+  --clr-primary-200: #b7e4c7;
+  --clr-primary-100: #d8f3dc;
+
+  --clr-accent-terracotta: #e07a5f;
+  --clr-accent-sand: #f4f1de;
+
+  --clr-neutral-900: #1d2d44;
+  --clr-neutral-700: #3d5a80;
+  --clr-neutral-400: #8d99ae;
+  --clr-neutral-200: #e9ecef;
+  --clr-neutral-100: #f8f9fa;
+  --clr-neutral-000: #ffffff;
+
+  --clr-status-danger: #e63946;
+  --clr-status-success: #2a9d8f;
+  --clr-status-warning: #e9c46a;
+
+  /* Tipografía */
+  --font-family-base: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-size-sm: clamp(0.8rem, 0.17vw + 0.76rem, 0.89rem);
+  --font-size-base: clamp(0.95rem, 0.25vw + 0.9rem, 1.1rem);
+  --font-size-lg: clamp(1.2rem, 0.5vw + 1.1rem, 1.5rem);
+  --font-size-xl: clamp(1.6rem, 1.2vw + 1.3rem, 2.4rem);
+
+  /* Espaciado (Box Model) */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+
+  /* Bordes & Sombras */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  --shadow-subtle: 0 4px 12px rgba(45, 106, 79, 0.06);
+  --shadow-medium: 0 8px 24px rgba(45, 106, 79, 0.12);
+  --shadow-hover: 0 16px 32px rgba(27, 67, 50, 0.18);
+
+  /* Transiciones */
+  --transition-fast: 0.2s ease-in-out;
+  --transition-smooth: 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* -----------------------------------------------------------------------------
+   2. RESETEO BÁSICO & CONFIGURACIÓN GLOBAL
+   ----------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  color: var(--clr-neutral-900);
+  background-color: #f4f6f0;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* -----------------------------------------------------------------------------
+   3. REESCRIBIR ESTILOS DE BOOTSTRAP (PERSONALIZACIÓN BOTÁNICA)
+   ----------------------------------------------------------------------------- */
+.navbar {
+  background-color: var(--clr-primary-900) !important;
+  box-shadow: var(--shadow-medium);
+  padding-block: var(--space-xs);
+  transition: var(--transition-smooth);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.35rem;
+  color: var(--clr-primary-100) !important;
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.nav-link {
+  color: var(--clr-neutral-200) !important;
+  font-weight: 500;
+  transition: var(--transition-fast);
+  padding-inline: var(--space-xs) !important;
+}
+
+.nav-link:hover,
+.nav-link:focus,
+.nav-link.active {
+  color: var(--clr-primary-200) !important;
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background-color: var(--clr-primary-800);
+  border-color: var(--clr-primary-800);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  padding: var(--space-2xs) var(--space-md);
+  transition: var(--transition-smooth);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--clr-primary-700);
+  border-color: var(--clr-primary-700);
+  box-shadow: 0 4px 12px rgba(45, 106, 79, 0.3);
+  transform: translateY(-2px);
+}
+
+.btn-outline-primary {
+  color: var(--clr-primary-800);
+  border-color: var(--clr-primary-800);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  transition: var(--transition-smooth);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--clr-primary-800);
+  border-color: var(--clr-primary-800);
+  color: var(--clr-neutral-000);
+}
+
+.btn-accent {
+  background-color: var(--clr-accent-terracotta);
+  color: var(--clr-neutral-000);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  transition: var(--transition-smooth);
+}
+
+.btn-accent:hover {
+  background-color: #c96846;
+  color: var(--clr-neutral-000);
+  transform: translateY(-2px);
+}
+
+/* -----------------------------------------------------------------------------
+   4. COMPONENTES BEM (BLOQUE__ELEMENTO--MODIFICADOR)
+   ----------------------------------------------------------------------------- */
+
+/* Bloque Hero Banner */
+.hero {
+  background: linear-gradient(135deg, var(--clr-primary-900) 0%, var(--clr-primary-800) 100%);
+  color: var(--clr-neutral-000);
+  padding-block: var(--space-xl);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  margin-bottom: var(--space-lg);
+  text-align: center;
+}
+
+.hero__title {
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  color: var(--clr-primary-100);
+  margin-bottom: var(--space-2xs);
+}
+
+.hero__subtitle {
+  font-size: var(--font-size-lg);
+  color: var(--clr-primary-200);
+  max-width: 600px;
+  margin-inline: auto;
+  opacity: 0.9;
+}
+
+/* Bloque Tarjeta de Planta/Producto */
+.plant-card {
+  background-color: var(--clr-neutral-000);
+  border: 1px solid var(--clr-neutral-200);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-subtle);
+  transition: var(--transition-smooth);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+}
+
+.plant-card:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-6px);
+  border-color: var(--clr-primary-200);
+}
+
+.plant-card__image-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 75%; /* Aspect Ratio 4:3 */
+  overflow: hidden;
+  background-color: var(--clr-primary-100);
+}
+
+.plant-card__image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: var(--transition-smooth);
+}
+
+.plant-card:hover .plant-card__image {
+  transform: scale(1.08);
+}
+
+.plant-card__category-badge {
+  position: absolute;
+  top: var(--space-2xs);
+  right: var(--space-2xs);
+  background-color: rgba(27, 67, 50, 0.85);
+  color: var(--clr-primary-100);
+  font-size: var(--font-size-sm);
+  padding: var(--space-3xs) var(--space-xs);
+  border-radius: var(--radius-full);
+  backdrop-filter: blur(4px);
+  font-weight: 600;
+}
+
+.plant-card__body {
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.plant-card__title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--clr-primary-900);
+  margin-bottom: var(--space-3xs);
+}
+
+.plant-card__description {
+  font-size: var(--font-size-sm);
+  color: var(--clr-neutral-700);
+  margin-bottom: var(--space-md);
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.plant-card__footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-2xs);
+  border-top: 1px solid var(--clr-neutral-200);
+}
+
+.plant-card__price {
+  font-size: var(--font-size-lg);
+  font-weight: 800;
+  color: var(--clr-primary-800);
+}
+
+/* Bloque Píldoras de Filtro por Categorías */
+.category-filter {
+  display: flex;
+  gap: var(--space-2xs);
+  overflow-x: auto;
+  padding-bottom: var(--space-2xs);
+  margin-bottom: var(--space-lg);
+  scrollbar-width: thin;
+}
+
+.category-filter__item {
+  white-space: nowrap;
+  padding: var(--space-2xs) var(--space-md);
+  border-radius: var(--radius-full);
+  background-color: var(--clr-neutral-000);
+  color: var(--clr-neutral-700);
+  border: 1px solid var(--clr-neutral-200);
+  font-weight: 600;
+  text-decoration: none;
+  transition: var(--transition-fast);
+}
+
+.category-filter__item:hover,
+.category-filter__item--active {
+  background-color: var(--clr-primary-800);
+  color: var(--clr-neutral-000);
+  border-color: var(--clr-primary-800);
+  box-shadow: var(--shadow-subtle);
+}
+
+/* Bloque Carrito de Compras (Cart Table) */
+.cart-card {
+  background-color: var(--clr-neutral-000);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-medium);
+  padding: var(--space-md);
+}
+
+.cart-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 var(--space-2xs);
+}
+
+.cart-table th {
+  color: var(--clr-neutral-700);
+  font-weight: 600;
+  border-bottom: 2px solid var(--clr-primary-100);
+  padding: var(--space-xs);
+}
+
+.cart-table td {
+  padding: var(--space-xs);
+  vertical-align: middle;
+  background-color: var(--clr-neutral-100);
+}
+
+.cart-table tr td:first-child {
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+}
+
+.cart-table tr td:last-child {
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.cart-table__quantity-input {
+  width: 70px;
+  text-align: center;
+  border: 1px solid var(--clr-neutral-200);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3xs);
+}
+
+.cart-summary {
+  background-color: var(--clr-primary-100);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  border: 1px solid var(--clr-primary-200);
+}
+
+.cart-summary__total {
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  color: var(--clr-primary-900);
+}
+
+/* -----------------------------------------------------------------------------
+   5. DISEÑO ADAPTATIVO (MEDIA QUERIES - MOBILE FIRST)
+   ----------------------------------------------------------------------------- */
+@media (min-width: 768px) {
+  .hero {
+    padding-block: var(--space-xl) * 1.5;
+    text-align: left;
+  }
+
+  .plant-card__image-wrapper {
+    padding-top: 65%;
+  }
+
+  .cart-card {
+    padding: var(--space-lg);
+  }
+}
+
+@media (min-width: 992px) {
+  .hero__title {
+    font-size: 3rem;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   6. ANIMACIONES & PSEUDO-ELEMENTOS
+   ----------------------------------------------------------------------------- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn var(--transition-smooth) forwards;
+}
+
+/* Insignia de Rol de Usuario */
+.badge-role {
+  font-size: 0.75rem;
+  padding: 0.2em 0.6em;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.badge-role--admin {
+  background-color: var(--clr-accent-terracotta);
+  color: white;
+}
+
+.badge-role--user {
+  background-color: var(--clr-primary-500);
+  color: white;
+}

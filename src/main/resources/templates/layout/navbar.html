@@ -1,0 +1,101 @@
+<!-- Fragmento Reutilizable de la Barra de Navegación -->
+<nav th:fragment="navbar" 
+     xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+     class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
+     
+    <div class="container">
+        
+        <!-- Marca y Logo de Botánica Urbana -->
+        <a class="navbar-brand d-flex align-items-center gap-2" th:href="@{/products}">
+            <i class="bi bi-flower1 text-success fs-4"></i>
+            <span class="fw-bold">Botánica Urbana</span>
+        </a>
+
+        <!-- Botón de Menú para Pantallas Móviles -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Navegación desplegable">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Elementos de la Barra de Navegación -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+            
+            <!-- Enlaces Principales -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/products}">
+                        <i class="bi bi-grid-fill me-1"></i> Catálogo
+                    </a>
+                </li>
+                
+                <!-- Enlace Exclusivo para el Administrador (Requisito 2) -->
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-link text-warning fw-semibold" th:href="@{/admin/products}">
+                        <i class="bi bi-gear-fill me-1"></i> Panel Admin (CRUD)
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Buscador de Productos -->
+            <form class="d-flex me-lg-3 my-2 my-lg-0" th:action="@{/products/search}" method="get">
+                <div class="input-group">
+                    <input class="form-control form-control-sm border-0" type="search" name="keyword" 
+                           placeholder="Buscar plantas..." aria-label="Búsqueda" th:value="${keyword}">
+                    <button class="btn btn-sm btn-success" type="submit" title="Buscar">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Estado del Usuario y Sesión -->
+            <ul class="navbar-nav align-items-lg-center gap-2">
+                
+                <!-- Botón del Carrito de Compras (Visible para Usuarios Autenticados) -->
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="btn btn-outline-light btn-sm position-relative d-flex align-items-center gap-1" th:href="@{/cart}">
+                        <i class="bi bi-cart-fill text-success fs-6"></i>
+                        <span>Mi Carrito</span>
+                    </a>
+                </li>
+
+                <!-- Menú Desplegable del Usuario Autenticado -->
+                <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                    <a class="nav-link dropdown-toggle text-light d-flex align-items-center gap-1" href="#" role="button" 
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-circle fs-5 text-success"></i>
+                        <span sec:authentication="name" class="fw-semibold">Usuario</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow">
+                        <li>
+                            <div class="dropdown-header">
+                                <small class="text-muted">Rol activo:</small>
+                                <span sec:authorize="hasRole('ADMIN')" class="badge bg-danger ms-1">ADMIN</span>
+                                <span sec:authorize="hasRole('USER')" class="badge bg-success ms-1">USER</span>
+                            </div>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form th:action="@{/logout}" method="post" class="px-2">
+                                <button class="btn btn-sm btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-1" type="submit">
+                                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- Botones para Visitantes Anónimos (No Logueados) -->
+                <li class="nav-item d-flex gap-2" sec:authorize="isAnonymous()">
+                    <a class="btn btn-sm btn-outline-light" th:href="@{/login}">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Iniciar Sesión
+                    </a>
+                    <a class="btn btn-sm btn-success" th:href="@{/register}">
+                        <i class="bi bi-person-plus-fill me-1"></i> Registrarse
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</nav>
